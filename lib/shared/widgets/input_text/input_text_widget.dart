@@ -36,6 +36,7 @@ class InputTextWidget extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               labelText: label,
               labelStyle: TextStyles.input,
+              errorStyle: TextStyles.inputError,
               icon: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
