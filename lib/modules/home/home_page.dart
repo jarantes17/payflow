@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payflow/app_widget.dart';
 import 'package:payflow/modules/extract/extract_page.dart';
 import 'package:payflow/modules/home/home_controller.dart';
 import 'package:payflow/modules/meus_boletos/meus_boletos_page.dart';
@@ -15,16 +16,31 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with RouteAware {
   final controller = HomeController();
-  final pages = [
-    MeusBoletosPage(
-      key: UniqueKey(),
-    ),
-    ExtractPage(
-      key: UniqueKey(),
-    )
-  ];
+  var pages = [MeusBoletosPage(), ExtractPage()];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  void didPopNext() {
+    _refreshPages();
+  }
+
+  void _refreshPages() {
+    setState(() {
+      pages = [MeusBoletosPage(), ExtractPage()];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,19 +101,20 @@ class _HomePageState extends State<HomePage> {
                     : AppColors.body,
               ),
             ),
-            Container(
-              height: 56,
-              width: 56,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/barcode_scanner");
-                },
-                icon: Icon(Icons.add_box_outlined),
-                color: AppColors.background,
+            GestureDetector(
+              onTap: () async {
+                await Navigator.pushNamed(context, "/barcode_scanner");
+              },
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(5)),
+                child: Icon(
+                  Icons.add_box_outlined,
+                  color: AppColors.background,
+                ),
               ),
             ),
             IconButton(

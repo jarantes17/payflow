@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/shared/models/boleto_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 
 class InsertBoletoController {
   final formKey = GlobalKey<FormState>();
@@ -31,34 +29,20 @@ class InsertBoletoController {
     );
   }
 
-  Future<void> cadastrarBoleto(BuildContext context) async {
-    if (validateForm()) {
-      await saveBoleto(context);
-      Navigator.pop(context);
-      return;
-    }
-  }
-
-  Future<void> saveBoleto(BuildContext context) async {
-    try {
-      final instance = await SharedPreferences.getInstance();
-      final boletos = instance.getStringList("boletos") ?? <String>[];
-      boletos.add(model.toJson());
-      await instance.setStringList("boletos", boletos);
-      return;
-    } catch (e) {
-      print(e);
-      showTopSnackBar(
-        context,
-        CustomSnackBar.error(
-          message: "Oops. Falha ao salvar dados do boleto",
-        ),
-      );
-    }
-  }
-
-  bool validateForm() {
+  Future<bool> add() async {
     final form = formKey.currentState;
-    return form!.validate();
+    if (form!.validate()) {
+      return await save();
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> save() async {
+    final instance = await SharedPreferences.getInstance();
+    final boletos = instance.getStringList("boletos") ?? <String>[];
+    boletos.add(model.toJson());
+    await instance.setStringList("boletos", boletos);
+    return true;
   }
 }

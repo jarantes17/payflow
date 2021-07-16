@@ -8,6 +8,8 @@ import 'package:payflow/modules/splash/splash_page.dart';
 import 'package:payflow/shared/models/user_model.dart';
 import 'package:payflow/shared/themes/app_colors.dart';
 
+final RouteObserver<PageRoute> routeObserver = new RouteObserver<PageRoute>();
+
 void main() {
   runApp(AppWidget());
 }
@@ -23,6 +25,7 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorObservers: <NavigatorObserver>[routeObserver],
       title: 'Pay Flow',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

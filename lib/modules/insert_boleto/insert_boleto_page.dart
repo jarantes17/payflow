@@ -32,7 +32,7 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
 
   @override
   void initState() {
-    if (widget.barcode != null) {
+    if (widget.barcode != null && widget.barcode != "null") {
       barcodeInputTextController.text = widget.barcode!;
     }
     super.initState();
@@ -122,7 +122,8 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
         },
         secondaryLabel: "Cadastrar",
         secondaryOnPressed: () async {
-          await controller.cadastrarBoleto(context);
+          final result = await controller.add();
+          if (result) Navigator.pop(context);
         },
         enableSecundaryColor: true,
       ),
