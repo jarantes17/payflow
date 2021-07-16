@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/shared/models/boleto_model.dart';
-import 'package:payflow/shared/themes/app_text_styles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 
 class InsertBoletoController {
   final formKey = GlobalKey<FormState>();
-  final model = BoletoModel();
+  BoletoModel model = BoletoModel();
 
   String? validateName(String? value) =>
       value?.isEmpty ?? true ? "O nome não pode ser vazio" : null;
@@ -24,8 +23,7 @@ class InsertBoletoController {
     double? value,
     String? barcode,
   }) {
-    validateForm();
-    model.copyWith(
+    model = model.copyWith(
       name: name,
       dueDate: dueDate,
       value: value,
@@ -37,13 +35,7 @@ class InsertBoletoController {
     if (validateForm()) {
       await saveBoleto(context);
       Navigator.pop(context);
-    } else {
-      showTopSnackBar(
-        context,
-        CustomSnackBar.error(
-          message: "Oops. Resolva as validações para salvar o boleto.",
-        ),
-      );
+      return;
     }
   }
 
